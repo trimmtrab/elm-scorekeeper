@@ -56,9 +56,43 @@ update msg model =
       Debug.log "Input Updated Model"
         { model | name = name }
 
+    Save ->
+      if (String.isEmpty model.name) then
+        Debug.log "Save Updated Model"
+          model
+      else
+        Debug.log "Save Updated Model"
+          (save model)
+
     -- _ acts like a wildcard
     _ ->
       model
+
+save : Model -> Model
+save model =
+  case model.playerId of
+    Just id ->
+      -- edit model id
+      model
+
+    Nothing ->
+      addPlayer model
+
+addPlayer : Model -> Model
+addPlayer model =
+  let
+    player =
+      Player (List.length model.players) model.name 0
+
+    newPlayers =
+      -- :: adds an element to a list beginning
+      -- (less expensive than ++)
+      player :: model.players
+  in
+    { model
+    | players = newPlayers
+    , name = ""
+    }
 
 -- view
 
