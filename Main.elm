@@ -64,9 +64,36 @@ update msg model =
         Debug.log "Save Updated Model"
           (save model)
 
+    Score player points ->
+      Debug.log "Score Updated Model"
+        (score model player points)
+
     -- _ acts like a wildcard
     _ ->
       model
+
+score: Model -> Player -> Int -> Model
+score model scorer points =
+  let
+    newPlayers =
+      List.map
+        (\ player ->
+          if player.id == scorer.id then
+            { player
+            | points = player.points + points
+            }
+          else
+            player
+        )
+        model.players
+    play =
+      Play (List.length model.plays) scorer.id scorer.name points
+  in
+    { model
+    | players = newPlayers
+    , plays = play :: model.plays
+    }
+
 
 save : Model -> Model
 save model =
