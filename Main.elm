@@ -48,9 +48,14 @@ type Msg
 update: Msg -> Model -> Model
 update msg model =
   case msg of
+    Cancel ->
+      Debug.log "Cancel Updated Model"
+        { model | name = "", playerId = Nothing }
+
     Input name ->
       Debug.log "Input Updated Model"
         { model | name = name }
+
     -- _ acts like a wildcard
     _ ->
       model
