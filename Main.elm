@@ -72,11 +72,42 @@ save : Model -> Model
 save model =
   case model.playerId of
     Just id ->
-      -- edit model id
-      model
+      editPlayer model id
 
     Nothing ->
       addPlayer model
+
+editPlayer : Model -> Int -> Model
+editPlayer model id =
+  let
+    newPlayers =
+      List.map
+        -- \ denotes an anonymous function
+        (\ player ->
+          if player.id == id then
+            { player | name = model.name }
+          else
+            player
+        )
+        model.players
+
+    newPlays =
+      List.map
+        (\ play ->
+          if play.playerId == id then
+            { play | name = model.name }
+          else
+            play
+        )
+        model.plays
+
+  in
+    { model
+    | name = ""
+    , playerId = Nothing
+    , players = newPlayers
+    , plays = newPlays
+    }
 
 addPlayer : Model -> Model
 addPlayer model =
