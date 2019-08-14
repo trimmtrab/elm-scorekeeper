@@ -52,6 +52,13 @@ update msg model =
       Debug.log "Cancel Updated Model"
         { model | name = "", playerId = Nothing }
 
+    Edit player ->
+      Debug.log "Edit Updated Model"
+        { model
+        | name = player.name
+        , playerId = Just player.id
+        }
+
     Input name ->
       Debug.log "Input Updated Model"
         { model | name = name }
