@@ -23,7 +23,7 @@ type alias Player =
 type alias Play =
   { id : Int
   , playerId : Int
-  , name : String
+  , playerName : String
   , points : Int
   }
 
@@ -95,7 +95,7 @@ editPlayer model id =
       List.map
         (\ play ->
           if play.playerId == id then
-            { play | name = model.name }
+            { play | playerName = model.name }
           else
             play
         )
