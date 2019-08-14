@@ -131,7 +131,66 @@ view : Model -> Html Msg
 view model =
   div [ class "scoreboard" ]
       [ h1 [] [ text "Score Keeper" ]
+      , playerSection model
       , playerForm model
+      ]
+
+playerSection : Model -> Html Msg
+playerSection model =
+  div []
+      [ playerListHeader
+      , playerList model
+      , pointTotal model
+      ]
+
+playerListHeader : Html Msg
+playerListHeader =
+  header []
+    [ div [] [ text "Name" ]
+    , div [] [ text "Points"]
+    ]
+
+playerList : Model -> Html Msg
+playerList model =
+  model.players
+    |> List.sortBy .name
+    |> List.map playerItem
+    |> ul []
+
+playerItem : Player -> Html Msg
+playerItem player =
+  li []
+    [ i
+      [ class "edit"
+      , onClick (Edit player)
+      ]
+      []
+    , div []
+      [ text player.name ]
+    , button
+      [ type_ "button"
+      , onClick (Score player 2)
+      ]
+      [ text "2pt" ]
+    , button
+      [ type_ "button"
+      , onClick (Score player 3)
+      ]
+      [ text "3pt" ]
+    , div []
+      [ text (String.fromInt player.points) ]
+    ]
+
+pointTotal : Model -> Html Msg
+pointTotal model =
+  let
+    total =
+      List.map .points model.plays
+        |> List.sum
+  in
+    footer []
+      [ div [] [ text "Total:" ]
+      , div [] [ text (String.fromInt total) ]
       ]
 
 playerForm : Model -> Html Msg
