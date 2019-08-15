@@ -235,14 +235,14 @@ playerList : Model -> Html Msg
 playerList model =
   model.players
     |> List.sortBy .name
-    |> List.map (playerItem model)
+    |> List.map (playerItem model.playerId)
     |> ul []
 
-playerItem : Model -> Player -> Html Msg
-playerItem model player =
+playerItem : Maybe Int -> Player -> Html Msg
+playerItem playerId player =
   let
     itemClass =
-      case model.playerId of
+      case playerId of
         Just id ->
           if player.id == id then
             "editedPlayer"
