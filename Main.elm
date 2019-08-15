@@ -52,6 +52,10 @@ update msg model =
       Debug.log "Cancel Updated Model"
         { model | name = "", playerId = Nothing }
 
+    DeletePlay play ->
+      Debug.log "Delete Play Updated Model"
+        deletePlay model play
+
     Edit player ->
       Debug.log "Edit Updated Model"
         { model
@@ -75,9 +79,26 @@ update msg model =
       Debug.log "Score Updated Model"
         (score model player points)
 
-    -- _ acts like a wildcard
-    _ ->
-      model
+deletePlay : Model -> Play -> Model
+deletePlay model play =
+  let
+    newPlays =
+      List.filter (\p -> p.id /= play.id) model.plays
+
+    newPlayers =
+      List.map
+        (\ player ->
+          if player.id == play.playerId then
+            { player | points = player.points - play.points }
+          else
+            player
+        )
+        model.players
+  in
+    { model
+    | players = newPlayers
+    , plays = newPlays
+    }
 
 score: Model -> Player -> Int -> Model
 score model scorer points =
