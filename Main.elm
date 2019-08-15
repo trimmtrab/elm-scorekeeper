@@ -235,32 +235,43 @@ playerList : Model -> Html Msg
 playerList model =
   model.players
     |> List.sortBy .name
-    |> List.map playerItem
+    |> List.map (playerItem model)
     |> ul []
 
-playerItem : Player -> Html Msg
-playerItem player =
-  li []
-    [ i
-      [ class "edit"
-      , onClick (Edit player)
+playerItem : Model -> Player -> Html Msg
+playerItem model player =
+  let
+    itemClass =
+      case model.playerId of
+        Just id ->
+          if player.id == id then
+            "editedPlayer"
+          else
+            ""
+        Nothing ->
+          ""
+  in
+    li []
+      [ i
+        [ class "edit"
+        , onClick (Edit player)
+        ]
+        []
+      , div [ class itemClass ]
+        [ text player.name ]
+      , button
+        [ type_ "button"
+        , onClick (Score player 2)
+        ]
+        [ text "2pt" ]
+      , button
+        [ type_ "button"
+        , onClick (Score player 3)
+        ]
+        [ text "3pt" ]
+      , div []
+        [ text (String.fromInt player.points) ]
       ]
-      []
-    , div []
-      [ text player.name ]
-    , button
-      [ type_ "button"
-      , onClick (Score player 2)
-      ]
-      [ text "2pt" ]
-    , button
-      [ type_ "button"
-      , onClick (Score player 3)
-      ]
-      [ text "3pt" ]
-    , div []
-      [ text (String.fromInt player.points) ]
-    ]
 
 pointTotal : Model -> Html Msg
 pointTotal model =
@@ -276,17 +287,26 @@ pointTotal model =
 
 playerForm : Model -> Html Msg
 playerForm model =
-  Html.form [ onSubmit Save ]
-    [ input
-        [ type_ "text"
-        , placeholder "Add/Edit Player..."
-        , onInput Input
-        , value model.name
-        ]
-        []
-    , button [ type_ "submit" ] [ text "Save" ]
-    , button [ type_ "button", onClick Cancel ] [ text "Cancel" ]
-    ]
+  let
+    inputClass =
+      case model.playerId of
+        Just id ->
+          "editedPlayer"
+        Nothing ->
+          ""
+  in
+    Html.form [ onSubmit Save ]
+      [ input
+          [ class inputClass
+          , type_ "text"
+          , placeholder "Add/Edit Player..."
+          , onInput Input
+          , value model.name
+          ]
+          []
+      , button [ type_ "submit" ] [ text "Save" ]
+      , button [ type_ "button", onClick Cancel ] [ text "Cancel" ]
+      ]
 
 main : Program () Model Msg
 main =
