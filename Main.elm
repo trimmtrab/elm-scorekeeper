@@ -49,35 +49,28 @@ update: Msg -> Model -> Model
 update msg model =
   case msg of
     Cancel ->
-      Debug.log "Cancel Updated Model"
-        { model | name = "", playerId = Nothing }
+      { model | name = "", playerId = Nothing }
 
     DeletePlay play ->
-      Debug.log "Delete Play Updated Model"
-        deletePlay model play
+      deletePlay model play
 
     Edit player ->
-      Debug.log "Edit Updated Model"
-        { model
+      { model
         | name = player.name
         , playerId = Just player.id
         }
 
     Input name ->
-      Debug.log "Input Updated Model"
-        { model | name = name }
+      { model | name = name }
 
     Save ->
       if (String.isEmpty model.name) then
-        Debug.log "Save Updated Model"
-          model
+        model
       else
-        Debug.log "Save Updated Model"
-          (save model)
+        (save model)
 
     Score player points ->
-      Debug.log "Score Updated Model"
-        (score model player points)
+      (score model player points)
 
 deletePlay : Model -> Play -> Model
 deletePlay model play =
