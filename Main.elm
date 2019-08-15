@@ -167,7 +167,40 @@ view model =
       [ h1 [] [ text "Score Keeper" ]
       , playerSection model
       , playerForm model
+      , playSection model
       ]
+
+playSection : Model -> Html Msg
+playSection model =
+  div []
+      [ playListHeader
+      , playList model
+      ]
+
+playListHeader  : Html msg
+playListHeader =
+  header []
+    [ div [] [ text "Plays" ]
+    , div [] [ text "Points" ]
+    ]
+
+playList : Model -> Html Msg
+playList model =
+  model.plays
+    |> List.map playItem
+    |> ul []
+
+playItem : Play -> Html Msg
+playItem play =
+  li []
+    [ i
+      [ class "remove"
+      , onClick (DeletePlay play)
+      ]
+      []
+    , div [] [ text play.playerName ]
+    , div [] [ text (String.fromInt play.points) ]
+    ]
 
 playerSection : Model -> Html Msg
 playerSection model =
